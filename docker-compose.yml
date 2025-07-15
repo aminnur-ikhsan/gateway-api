@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  app:
+    container_name: auth_gateway
+    build: .
+    ports:
+      - '8080:8000'
+    volumes:
+      - .:/home/app
+    networks:
+      - common-network
+volumes:
+  app:
+networks:
+  common-network:
+    driver: bridge
