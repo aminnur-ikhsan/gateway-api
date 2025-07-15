@@ -20,4 +20,9 @@ class AccessTokenModel extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(UserProviderModel::class, 'id_user', 'id');
+    }
 }

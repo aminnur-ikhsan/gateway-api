@@ -195,7 +195,15 @@ class SignInController extends Controller
             }
 
             // Get authenticated user
-            $validateToken = AccessTokenModel::where('token', $token)->first();
+            $validateToken = AccessTokenModel::select(
+                'provider_access_tokens.expires_at',
+                'provider_users.id_user',
+                'provider_users.name',
+                'provider_users.email'
+            )
+                ->where('token', $token)
+                ->join('custom.provider_users', 'provider_access_tokens.id_user', '=', 'provider_users.id')
+                ->first();
             if (!$validateToken) {
                 return $this->responseError('Invalid token');
             }
@@ -205,26 +213,19 @@ class SignInController extends Controller
                 return $this->responseError('Invalid token');
             }
 
-            // Check is user available
-            $user = UserProviderModel::where('id', $validateToken->id_user)
-                ->where('id_provider', $idProvider)
-                ->first();
-            if (!$user) {
-                return $this->responseError('Invalid token');
-            }
-
             // Update token expiration time
-            $validateToken->update([
-                'last_used_at' => now(),
-                'hit' => $validateToken->hit + 1,
-                'expires_at' => now()->addMinutes(config('auth.login_time'))
-            ]);
+            AccessTokenModel::where('token', $token)
+                ->update([
+                    'last_used_at' => now(),
+                    'hit' => $validateToken->hit + 1,
+                    'expires_at' => now()->addMinutes(config('auth.login_time'))
+                ]);
 
             return $this->responseSuccess('Token is valid', [
                 'user' => [
-                    'id_user' => $user->id_user,
-                    'name' => $user->name,
-                    'email' => $user->email
+                    'id_user' => $validateToken->id_user,
+                    'name' => $validateToken->name,
+                    'email' => $validateToken->email
                 ]
             ]);
         } catch (\Exception $e) {
