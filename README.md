@@ -65,4 +65,32 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-## Hallo
+### Prerequisites
+
+- PHP 8.1
+- Composer
+- MySQL
+- Docker (only development)
+
+## How to setup in local development
+- Clone the repo
+- Copy `.env.example` to `.env`
+- Update database credentials in `.env`
+- Run `docker-compose build`
+- Run `docker-compose up -d`
+- Run `docker-compose exec app bash`
+- Run `composer install`
+- Run `php artisan key:generate`
+- Run `php artisan migrate`
+
+## How to setup in server
+- Clone the repo
+- Copy `.env.example` to `.env`
+- Update database credentials in `.env`
+- Run `composer install`
+- Run `php artisan key:generate`
+- Run `php artisan migrate`
+
+There 2 model for running application in server
+1. use your xampp/lampp html folder and put this project in htdocs folder
+2. Run `php -S 0.0.0.0:8000 -t public -d`
