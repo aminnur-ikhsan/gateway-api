@@ -206,9 +206,7 @@ class SignInController extends Controller
             }
 
             // Check is user available
-            $user = UserProviderModel::where('id', $validateToken->id_user)
-                ->where('id_provider', $idProvider)
-                ->first();
+            $user = $validateToken->user()->first();
             if (!$user) {
                 return $this->responseError('Invalid token');
             }
