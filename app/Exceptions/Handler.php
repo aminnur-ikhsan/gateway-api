@@ -59,10 +59,6 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $exception)
     {
-        // if ($this->shouldReport($exception)) {
-        //     Integration::capture($exception);
-        // }
-
         if ($this->shouldReport($exception) && app()->bound('sentry')) {
             Integration::captureUnhandledException($exception);
         }
