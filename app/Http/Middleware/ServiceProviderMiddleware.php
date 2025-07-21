@@ -20,6 +20,14 @@ class ServiceProviderMiddleware
     public function handle(Request $request, Closure $next)
     {
         $token = $request->header('Provider-token');
+
+        if (empty($token)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         $userProvider = ProvidersModel::where('token', $token)->first();
 
         if (!$userProvider) {
